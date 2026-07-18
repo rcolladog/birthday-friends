@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-url-polyfill/auto';
-import { ensureSession } from "../services/authService";
+import { initSession } from "../services/authService";
 
 
 export default function RootLayout() {
 
   const [ready, setReady] = useState(false);
-  useEffect(()=>{ensureSession().then(()=> setReady(true)).catch((err)=>{console.error("Error: ", err)}), []}
+  useEffect(()=>{initSession().then(()=> setReady(true)).catch((err)=>{console.error("Error: ", err)}), []}
 );
 
 if(!ready){

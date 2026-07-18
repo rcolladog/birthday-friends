@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-export async function ensureSession() {
+export async function initSession() {
   const { data: { session } } = await supabase.auth.getSession();
   
   if (!session) {

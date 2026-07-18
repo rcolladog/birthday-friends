@@ -1,4 +1,4 @@
-export interface Friend {
+export interface FriendInterface {
   user_id?: string;
   id: string;
   name: string;
@@ -6,4 +6,4 @@ export interface Friend {
   created_at?: string;
 }
 
-export type NewFriend = Omit<Friend, 'id' | 'created_at'| 'user_id' >;
+export type NewFriend = Omit<FriendInterface, 'id' | 'created_at'| 'user_id' >;
