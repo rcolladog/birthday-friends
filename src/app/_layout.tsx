@@ -7,12 +7,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-url-polyfill/auto';
 import { initSession } from "../services/authService";
 
-
 export default function RootLayout() {
 
   const [ready, setReady] = useState(false);
-  useEffect(()=>{initSession().then(()=> setReady(true)).catch((err)=>{console.error("Error: ", err)}), []}
-);
+  
+  useEffect(() => {initSession().then(() => setReady(true)).catch((err) => console.error("Error: ", err))}, []);
+
 
 if(!ready){
    return (
@@ -30,8 +30,6 @@ if(!ready){
         <Stack.Screen name="index" options={{ header: () => <Header></Header> }} />
       </Stack>
     </SafeAreaProvider>
-
-
   );
 }
 
