@@ -1,5 +1,6 @@
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Friend from "../components/friend";
 import Searcher from '../components/searcher';
 import { FriendInterface } from "../interface/friend";
@@ -11,7 +12,6 @@ export default function Index() {
 
   useEffect(()=> {friendService.getAll().then(setFriends).catch((err)=> console.error("Error cargando los amigos:", err))}, []);
 
-
   return (
     <View style={globalStyles.container}>
       <Searcher />
@@ -19,6 +19,11 @@ export default function Index() {
       <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>
       <Friend friends={friends}></Friend>
       </View>
+
+      <Pressable style={style.button} onPress={() => router.push("/add-friend")}>
+
+        <Text style={style.text}>Agregar amigos</Text>
+      </Pressable>
     </View>
   );
 }
@@ -29,6 +34,22 @@ const style = StyleSheet.create({
   alignItems: "center",
   },
   text:{
-    fontSize: 15
+    fontSize: 20,
+    color: "#fff",
+    margin:"auto",
+    fontWeight: "600",
+    
   },
+  button:{
+    backgroundColor: "#fa91b4",
+    marginTop:"auto",
+    alignSelf:"center",
+    width:350,
+    height:70,
+    borderColor: "#fa91b4",
+    borderRadius:25,
+    marginBottom:40,
+    marginRight:40,
+     
+  }
 });
