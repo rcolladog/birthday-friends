@@ -1,11 +1,11 @@
 
-import { Friend, NewFriend } from "../interface/friend";
+import { FriendInterface, NewFriend } from "../interface/friend";
 import { supabase } from "./supabase";
 
 export const friendService = {
 
     
-  async getAll(): Promise<Friend[]> {
+  async getAll(): Promise<FriendInterface[]> {
     const { data, error } = await supabase
       .from('friends')
       .select('*')
@@ -15,7 +15,7 @@ export const friendService = {
     return data;
   },
 
-  async getById(id: string): Promise<Friend | null> {
+  async getById(id: string): Promise<FriendInterface | null> {
     const { data, error } = await supabase
       .from('friends')
       .select('*')
@@ -26,7 +26,7 @@ export const friendService = {
     return data;
   },
 
-  async create(friend: NewFriend): Promise<Friend> {
+  async create(friend: NewFriend): Promise<FriendInterface> {
     const { data, error } = await supabase
       .from('friends')
       .insert(friend)
@@ -37,7 +37,7 @@ export const friendService = {
     return data;
   },
 
-  async update(id: string, friend: Partial<NewFriend>): Promise<Friend> {
+  async update(id: string, friend: Partial<NewFriend>): Promise<FriendInterface> {
     const { data, error } = await supabase
       .from('friends')
       .update(friend)
