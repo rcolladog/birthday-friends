@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-url-polyfill/auto';
+import Footer from "../components/footer";
 import { initSession } from "../services/authService";
 
 export default function RootLayout() {
@@ -28,7 +29,10 @@ if(!ready){
     <SafeAreaProvider>
       <Stack screenOptions={{ contentStyle: globalStyles.background }}>
         <Stack.Screen name="index" options={{ header: () => <Header></Header> }} />
+        <Stack.Screen name="add-friend"  options={{ header: () => <Header /> }} />
+    
       </Stack>
+      <Footer></Footer>
     </SafeAreaProvider>
   );
 }
