@@ -3,6 +3,7 @@ export interface FriendInterface {
   id: string;
   name: string;
   birthday: string;
+  image?: string; 
   created_at?: string;
 }
 
