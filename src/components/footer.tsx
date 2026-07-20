@@ -7,9 +7,9 @@ const path=usePathname();
 
 return (
       <View style={style.container}>
-       <Ionicons style={style.icons} name="home-outline" size={24} color="white" />
-       <Ionicons style={style.icons} name="calendar-outline" size={24} color="white" />
-       <Ionicons style={style.icons} name="notifications-outline" size={24} color="white" />
+       <Ionicons style={path=== "/" ? style.activeIcon : style.icons} name="home-outline" size={24} color="white" />
+       <Ionicons style={path=== "" ? style.activeIcon : style.icons} name="calendar-outline" size={24} color="white" />
+       <Ionicons style={[path=== "" ? style.activeIcon : style.icons]} name="notifications-outline" size={24} color="white" />
       </View>
     );
 
@@ -28,8 +28,10 @@ const style= RNStyleSheet.create({
         borderColor:"#4b4a4a"},
         
     icons:{color:"gray"
-
     },
+    activeIcon:{
+        color:"pink"
+    }
 
 
 

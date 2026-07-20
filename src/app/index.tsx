@@ -19,9 +19,7 @@ export default function Index() {
       <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>
       <Friend friends={friends}></Friend>
       </View>
-
       <Pressable style={style.button} onPress={() => router.push("/add-friend")}>
-
         <Text style={style.text}>Agregar amigos</Text>
       </Pressable>
     </View>
