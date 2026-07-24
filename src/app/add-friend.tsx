@@ -1,33 +1,70 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { Image, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { friendService } from '../services/friendService';
 
 export default function AddFriend() {
 
-    const [name, setName] = useState("");
     const [birthday, setBirthday] = useState(new Date());
     const [isEnabled, setIsEnabled] = useState(false);
+    const [image, setImage] = useState<string | undefined>(undefined);
+    const { control, handleSubmit, formState: { errors } } = useForm<{ name: string }>();
 
+    const pickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
 
-    const saveFriend = () => { friendService.create({ name, birthday: birthday.toISOString().split("T")[0] }) };
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+    const onSubmit = (data: { name: string }) => {
+        friendService.create({ name: data.name, birthday: birthday.toISOString().split("T")[0], image: image });
+        router.push("/");
+    }
 
     return (
 
         <View style={style.container}>
-            <View style={style.image}>
-                <Ionicons name="camera-outline" size={40} color="grey" />
-            </View>
+            <Pressable onPress={pickImage} style={style.image}>
+                {image ? (
+                    <Image source={{ uri: image }} style={{ width: '100%', height: '100%', borderRadius: 100 }} />
+                ) : (
+                    <Ionicons name="camera-outline" size={40} color="grey" />
+                )}
+            </Pressable>
+
             <Text style={style.textImage}>Foto (opcional)</Text>
 
             <View style={style.row}>
                 <Text style={style.title}>NOMBRE</Text>
-                <TextInput style={style.input} placeholder='Nombre de tu amigo' value={name} onChangeText={setName}></TextInput>
+                <Controller
+                    control={control}
+                    name="name"
+                    rules={{ required: "El nombre no puede estar vacío" }}
+                    defaultValue=""
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            style={[style.input, errors.name && style.inputError]}
+                            placeholder='Nombre de tu amigo'
+                            value={value}
+                            onChangeText={onChange}
+                        />
+                    )}
+                />
+                {errors.name && <Text style={style.errorText}>{errors.name.message}</Text>}
+
                 <Text style={style.title}>FECHA CUMPLEAÑOS</Text>
-                <Pressable style={[style.input, style.inputDate]} >
 
-
+                <Pressable style={style.inputDate} >
                     <DateTimePicker
                         value={birthday}
                         mode="date"
@@ -36,20 +73,19 @@ export default function AddFriend() {
                             if (selectedDate) setBirthday(selectedDate);
                         }}
                     />
-
                 </Pressable>
 
                 <Text style={style.title}>RECORDATORIO</Text>
+
                 <View style={[style.input, style.inputSwitch]}>
                     <Text style={style.text}>Avisar el día de antes</Text>
                     <Switch style={style.switch} value={isEnabled} onValueChange={setIsEnabled} trackColor={{ false: "#ccc", true: "#fa91b4" }}></Switch>
                 </View>
             </View>
 
-            <Pressable style={style.saveButton} onPress={saveFriend}>
+            <Pressable style={style.saveButton} onPress={handleSubmit(onSubmit)}>
                 <Text style={style.whiteText}>Guardar</Text>
             </Pressable>
-
         </View>
 
     );
@@ -110,8 +146,13 @@ const style = StyleSheet.create({
     inputDate: {
         alignItems: "flex-start",
         justifyContent: "center",
-        width:185
-
+        width: 140,
+        height: 50,
+        borderWidth: 1,
+        borderColor: "#fa91b4",
+        borderRadius: 15,
+        color: "#fff",
+        fontSize: 18,
     },
     inputSwitch: {
         flexDirection: "row",
@@ -119,9 +160,17 @@ const style = StyleSheet.create({
         gap: 20,
         alignItems: "center"
     },
+    inputError: {
+        borderColor: "red",
+    },
+    errorText: {
+        color: "red",
+        fontSize: 14,
+        marginTop: 5,
+        marginLeft: 5,
+        marginBottom: 5,
+    },
     switch: { marginTop: 10 }
-
-
 
 });
 
