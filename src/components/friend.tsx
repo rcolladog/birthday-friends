@@ -2,7 +2,7 @@ import { Image, StyleSheet as RNStyleSheet, Text, View } from 'react-native';
 import { FriendInterface } from '../interface/friend';
 
 
-export default function Friend({ friends }: { friends: FriendInterface[] }) {
+export default function Friend( { friends }: { friends: FriendInterface[] }) {
 
     if(friends === null || friends.length === 0){
         return(
