@@ -4,6 +4,16 @@ import { supabase } from "./supabase";
 
 export const friendService = {
 
+  async search(name: string): Promise<FriendInterface[]> {
+  const { data, error } = await supabase
+    .from('friends')
+    .select('*')
+    .ilike('name', `%${name}%`) 
+    .order('birthday', { ascending: true });
+
+  if (error) throw error;
+  return data;
+},
     
   async getAll(): Promise<FriendInterface[]> {
     const { data, error } = await supabase

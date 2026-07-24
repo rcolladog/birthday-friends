@@ -2,17 +2,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { StyleSheet as RNStyleSheet, TextInput, View } from 'react-native';
 
+export default function Searcher({ filterSearcher }:{filterSearcher: (text:string)=>void;}) {
 
-export default function Searcher() {
+    const [text, setText] = useState("");
+    const handleText=(newText:string)=>{setText(newText); filterSearcher(newText)};
 
-    const [search, setSearch] = useState("");
     return (
         <View style={style.container}>
             <Ionicons style={style.icon} name='search' size={20}></Ionicons>
             <View>
                 <Ionicons/>
             </View>
-            <TextInput style={style.input} placeholder="Buscar amigo..." onChangeText={setSearch} value={search} />
+            <TextInput style={style.input} placeholder="Buscar amigo..." onChangeText={handleText} value={text} />
         </View>
     );
 }

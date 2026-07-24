@@ -9,15 +9,22 @@ import { globalStyles } from "../styles/global";
 export default function Index() {
 
   const [friends, setFriends] = useState<FriendInterface[]> ([]);
+  const [shownFriends, setShownFriends] = useState<FriendInterface[]> ([]);
 
-  useEffect(()=> {friendService.getAll().then(setFriends).catch((err)=> console.error("Error cargando los amigos:", err))}, []);
+  useEffect(()=> {friendService.getAll()
+    .then((data)=>{setFriends(data), setShownFriends(data)})
+    .catch((err)=> console.error("Error cargando los amigos:", err))}, []);
+
+  const filterSearcher = (text:string) =>{const filteredNames = friends.filter((f)=>f.name.toLowerCase().trim().includes(text.toLowerCase().trim()))
+  setShownFriends(filteredNames)};
+
 
   return (
     <View style={globalStyles.container}>
-      <Searcher />
+      <Searcher filterSearcher={filterSearcher}/>
       <View style={style.row}>
       <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>
-      <Friend friends={friends}></Friend>
+      <Friend friends={shownFriends}></Friend>
       </View>
       <Pressable style={style.button} onPress={() => router.push("/add-friend")}>
         <Text style={style.text}>Agregar amigos</Text>
