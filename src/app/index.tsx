@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Friend from "../components/friend";
 import Searcher from '../components/searcher';
@@ -11,9 +11,16 @@ export default function Index() {
   const [friends, setFriends] = useState<FriendInterface[]> ([]);
   const [shownFriends, setShownFriends] = useState<FriendInterface[]> ([]);
 
-  useEffect(()=> {friendService.getAll()
-    .then((data)=>{setFriends(data), setShownFriends(data)})
-    .catch((err)=> console.error("Error cargando los amigos:", err))}, []);
+  useFocusEffect(
+    useCallback(() => {
+        friendService.getAll()
+            .then((data) => {
+                setFriends(data);
+                setShownFriends(data);
+            })
+            .catch((err) => console.error("Error cargando los amigos:", err));
+    }, [])
+);
 
   const filterSearcher = (text:string) =>{const filteredNames = friends.filter((f)=>f.name.toLowerCase().trim().includes(text.toLowerCase().trim()))
   setShownFriends(filteredNames)};
@@ -23,11 +30,11 @@ export default function Index() {
     <View style={globalStyles.container}>
       <Searcher filterSearcher={filterSearcher}/>
       <View style={style.row}>
-      <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>
+      {shownFriends.length > 0 &&   <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>}
       <Friend friends={shownFriends}></Friend>
       </View>
       <Pressable style={style.button} onPress={() => router.push("/add-friend")}>
-        <Text style={style.text}>Agregar amigos</Text>
+        <Text style={style.text}>Agregar amigo</Text>
       </Pressable>
     </View>
   );
