@@ -1,11 +1,12 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Friend from "../components/friend";
 import Searcher from '../components/searcher';
 import { FriendInterface } from "../interface/friend";
 import { friendService } from "../services/friendService";
 import { globalStyles } from "../styles/global";
+
 export default function Index() {
 
   const [friends, setFriends] = useState<FriendInterface[]> ([]);
@@ -26,13 +27,15 @@ export default function Index() {
   setShownFriends(filteredNames)};
 
 
-  return (
+   return (
     <View style={globalStyles.container}>
       <Searcher filterSearcher={filterSearcher}/>
-      <View style={style.row}>
-      {shownFriends.length > 0 &&   <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>}
-      <Friend friends={shownFriends}></Friend>
-      </View>
+      <ScrollView>
+        <View style={style.row}>
+          {shownFriends.length > 0 && <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>}
+          <Friend friends={shownFriends}></Friend>
+        </View>
+      </ScrollView>
       <Pressable style={style.button} onPress={() => router.push("/add-friend")}>
         <Text style={style.text}>Agregar amigo</Text>
       </Pressable>
