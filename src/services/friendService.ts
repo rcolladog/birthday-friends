@@ -36,6 +36,17 @@ export const friendService = {
     return data;
   },
 
+   async getReminders(): Promise<FriendInterface[]> {
+    const { data, error } = await supabase
+      .from('friends')
+      .select('*')
+      .eq('reminder', true)
+      .order('birthday', { ascending: true });
+
+    if (error) throw error;
+    return data;
+  },
+
   async create(friend: NewFriend): Promise<FriendInterface> {
     const { data, error } = await supabase
       .from('friends')

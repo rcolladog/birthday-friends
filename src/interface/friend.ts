@@ -4,6 +4,7 @@ export interface FriendInterface {
   name: string;
   birthday: string;
   image?: string; 
+  reminder?: boolean;
   created_at?: string;
 }
 
