@@ -26,9 +26,13 @@ export default function AddFriend() {
             setImage(result.assets[0].uri);
         }
     };
-    const onSubmit = (data: { name: string }) => {
-        friendService.create({ name: data.name, birthday: birthday.toISOString().split("T")[0], image: image });
+    const onSubmit = async (data: { name: string }) => {
+        try{ 
+        await friendService.create({ name: data.name, birthday: birthday.toISOString().split("T")[0], image: image, reminder:isEnabled });
         router.push("/");
+        } catch (error) {
+        console.error("Error creando amigo:", error);
+    }
     }
 
     return (
@@ -62,7 +66,16 @@ export default function AddFriend() {
                 />
                 {errors.name && <Text style={style.errorText}>{errors.name.message}</Text>}
 
-                <Text style={style.title}>FECHA CUMPLEAÑOS</Text>
+    
+
+                <Text style={style.title}>RECORDATORIO</Text>
+
+                <View style={[style.input, style.inputSwitch]}>
+                    <Text style={style.text}>Avisar el día de antes</Text>
+                    <Switch style={style.switch} value={isEnabled} onValueChange={setIsEnabled} trackColor={{ false: "#ccc", true: "#fa91b4" }}></Switch>
+                </View>
+
+                 <Text style={style.title}>FECHA CUMPLEAÑOS</Text>
 
                 <Pressable style={style.inputDate} >
                     <DateTimePicker
@@ -74,14 +87,9 @@ export default function AddFriend() {
                         }}
                     />
                 </Pressable>
-
-                <Text style={style.title}>RECORDATORIO</Text>
-
-                <View style={[style.input, style.inputSwitch]}>
-                    <Text style={style.text}>Avisar el día de antes</Text>
-                    <Switch style={style.switch} value={isEnabled} onValueChange={setIsEnabled} trackColor={{ false: "#ccc", true: "#fa91b4" }}></Switch>
-                </View>
             </View>
+
+           
 
             <Pressable style={style.saveButton} onPress={handleSubmit(onSubmit)}>
                 <Text style={style.whiteText}>Guardar</Text>
@@ -144,15 +152,14 @@ const style = StyleSheet.create({
     whiteText: { color: "white", fontSize: 16, fontWeight: "bold" },
 
     inputDate: {
+         flexDirection: "row",
         alignItems: "flex-start",
         justifyContent: "center",
         width: 140,
         height: 50,
-        borderWidth: 1,
-        borderColor: "#fa91b4",
-        borderRadius: 15,
         color: "#fff",
         fontSize: 18,
+        paddingRight:20,
     },
     inputSwitch: {
         flexDirection: "row",
