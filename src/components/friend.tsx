@@ -3,12 +3,17 @@ import { router } from 'expo-router';
 import { Alert, Image, Pressable, StyleSheet as RNStyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { getDaysUntilBirthday } from "../helper/getDaysBirthday";
 import { FriendInterface } from '../interface/friend';
 import { friendService } from '../services/friendService';
 
 
 
+
 export default function Friend({ friends }: { friends: FriendInterface[] }) {
+
+
+
 
     const getInitial = (name: string) => {
         return name
@@ -18,39 +23,51 @@ export default function Friend({ friends }: { friends: FriendInterface[] }) {
             .map((char) => char.charAt(0).toUpperCase())
             .join("");
     };
-      const handleDelete = async (id: string) => {
-    Alert.alert(
-        "Eliminar amigo",
-        "¿Estás seguro de que quieres eliminar este amigo?",
-        [
-            {
-                text: "Cancelar",
-                onPress: () => console.log("Cancelado"),
-                style: "cancel",
-            },
-            {
-                text: "Eliminar",
-                onPress: async () => {
-                    try {
-                        await friendService.remove(id);
-                        router.push("/");
-                    } catch (error) {
-                        console.error("Error eliminando amigo:", error);
-                    }
+    const handleDelete = async (id: string) => {
+        Alert.alert(
+            "Eliminar amigo",
+            "¿Estás seguro de que quieres eliminar este amigo?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancelado"),
+                    style: "cancel",
                 },
-                style: "destructive",
-            },
-        ]
-    );
-};
+                {
+                    text: "Eliminar",
+                    onPress: async () => {
+                        try {
+                            await friendService.remove(id);
+                            router.push("/");
+                        } catch (error) {
+                            console.error("Error eliminando amigo:", error);
+                        }
+                    },
+                    style: "destructive",
+                },
+            ]
+        );
+    };
 
-      const renderRightActions = (id: string) => (
-        <Pressable 
-            style={style.deleteAction}
-            onPress={() => handleDelete(id)}
-        >
-             <Ionicons name="trash" size={24} color="#fff" />
-        </Pressable>
+    const handleEdit = (id: string) => {
+        router.push(`/add-friend?id=${id}`);
+    };
+
+    const renderRightActions = (id: string) => (
+        <View style={{ flexDirection: "row", gap: 10 }}>
+            <Pressable
+                style={style.editAction}
+                onPress={() => handleEdit(id)}
+            >
+                <Ionicons name="pencil" size={24} color="#fff" />
+            </Pressable>
+            <Pressable
+                style={style.deleteAction}
+                onPress={() => handleDelete(id)}
+            >
+                <Ionicons name="trash" size={24} color="#fff" />
+            </Pressable>
+        </View>
     );
 
 
@@ -65,8 +82,12 @@ export default function Friend({ friends }: { friends: FriendInterface[] }) {
         );
     }
 
+    const formatDays = (days: string | number) => {
+     return typeof days === "number" ? `En ${days} días` : days;
+};
+
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView >
             {friends.map((friend) => (
                 <Swipeable
                     key={friend.id}
@@ -82,7 +103,7 @@ export default function Friend({ friends }: { friends: FriendInterface[] }) {
                         )}
 
                         <Text style={style.name}>{friend.name}</Text>
-                        <Text style={style.date}>En {friend.birthday} días</Text>
+                       <Text style={style.date}>{formatDays(getDaysUntilBirthday(friend.birthday))}</Text>
                     </View>
                 </Swipeable>
             ))}
@@ -154,15 +175,25 @@ const style = RNStyleSheet.create({
         textAlign: "center",
         marginTop: 20
     },
+    editAction: {
+        backgroundColor: "#4a90e2",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        marginTop: 30,
+        marginLeft: 10,
+    },
 
-     deleteAction: {
+    deleteAction: {
         backgroundColor: "#ff4444",
         alignItems: "center",
         justifyContent: "center",
-        width:50,
-        height:50,
+        width: 50,
+        height: 50,
         borderRadius: 50,
-        marginTop:30,
-       marginLeft:30
+        marginTop: 30,
+        
     },
 });

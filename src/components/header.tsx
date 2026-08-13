@@ -1,5 +1,5 @@
-import { router, usePathname } from 'expo-router';
-import { Pressable, StyleSheet as RNStyleSheet, Text, View } from 'react-native';
+import { usePathname } from 'expo-router';
+import { StyleSheet as RNStyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { globalStyles } from '../styles/global';
 
@@ -10,10 +10,10 @@ export default function Header() {
   if (pathname === "/add-friend") {
     return (
       <View style={[style.header, style.headerFriend, { paddingTop: safeArea.top }]}>
-        <Pressable style={style.button}  onPress={() => router.push("/")}>
+       {/* <Pressable style={style.button}  onPress={() => router.push("/")}>
           <Text style={{color:"white"}}>Inicio</Text>
-          </Pressable>
-        <Text style={globalStyles.title}>Añadir amigos</Text>
+          </Pressable>*/}
+        <Text style={style.title}>Añadir amigos</Text>
       </View>
     );
   }
@@ -37,7 +37,8 @@ export const style = RNStyleSheet.create({
     marginBottom: 40,
     
   },
-  headerFriend:{flexDirection: "row",justifyContent: "flex-start",  alignItems: "center",  },
+  headerFriend:{flexDirection: "row", justifyContent: "center",  alignItems: "center",  },
+  title: {color: "#fff", fontSize: 20, fontWeight: "600",},
   button:{
     width:100,
     height:50, 
@@ -47,6 +48,5 @@ export const style = RNStyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
     borderRadius:100
-    
   },
 });

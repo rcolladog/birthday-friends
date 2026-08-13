@@ -10,9 +10,10 @@ return (
         <Pressable onPress={()=> router.push("/")}> 
             <Ionicons style={path=== "/" ? style.activeIcon : style.icons} name="home-outline" size={24} color="white" />
         </Pressable>
-      
-       <Ionicons style={path=== "" ? style.activeIcon : style.icons} name="calendar-outline" size={24} color="white" />
-       <Ionicons style={[path=== "" ? style.activeIcon : style.icons]} name="notifications-outline" size={24} color="white" />
+        <Pressable onPress={()=> router.push("/calendar")}> 
+       <Ionicons style={path=== "/calendar" ? style.activeIcon : style.icons} name="calendar-outline" size={24} color="white" />
+       </Pressable>
+      {/* <Ionicons style={[path=== "" ? style.activeIcon : style.icons]} name="notifications-outline" size={24} color="white" /> */}
       </View>
     );
 

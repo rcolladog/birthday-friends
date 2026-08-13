@@ -7,30 +7,33 @@ import { FriendInterface } from "../interface/friend";
 import { friendService } from "../services/friendService";
 import { globalStyles } from "../styles/global";
 
+
 export default function Index() {
 
-  const [friends, setFriends] = useState<FriendInterface[]> ([]);
-  const [shownFriends, setShownFriends] = useState<FriendInterface[]> ([]);
+  const [friends, setFriends] = useState<FriendInterface[]>([]);
+  const [shownFriends, setShownFriends] = useState<FriendInterface[]>([]);
 
   useFocusEffect(
     useCallback(() => {
-        friendService.getAll()
-            .then((data) => {
-                setFriends(data);
-                setShownFriends(data);
-            })
-            .catch((err) => console.error("Error cargando los amigos:", err));
+      friendService.getAll()
+        .then((data) => {
+          setFriends(data);
+          setShownFriends(data);
+        })
+        .catch((err) => console.error("Error cargando los amigos:", err));
     }, [])
-);
+  );
 
-  const filterSearcher = (text:string) =>{const filteredNames = friends.filter((f)=>f.name.toLowerCase().trim().includes(text.toLowerCase().trim()))
-  setShownFriends(filteredNames)};
+  const filterSearcher = (text: string) => {
+    const filteredNames = friends.filter((f) => f.name.toLowerCase().trim().includes(text.toLowerCase().trim()))
+    setShownFriends(filteredNames)
+  };
 
 
-   return (
+  return (
     <View style={globalStyles.container}>
-      <Searcher filterSearcher={filterSearcher}/>
-      <ScrollView>
+      <Searcher filterSearcher={filterSearcher} />
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={style.row}>
           {shownFriends.length > 0 && <Text style={globalStyles.subtitles}>PRÓXIMOS CUMPLEAÑOS</Text>}
           <Friend friends={shownFriends}></Friend>
@@ -43,28 +46,29 @@ export default function Index() {
   );
 }
 const style = StyleSheet.create({
- 
-  row:{
-  marginTop:20,
-  alignItems: "center",
+
+  row: {
+    marginTop: 20,
+    alignItems: "center",
+    width: "100%",
   },
-  text:{
+  text: {
     fontSize: 20,
     color: "#fff",
-    margin:"auto",
+    margin: "auto",
     fontWeight: "600",
-    
+
   },
-  button:{
+  button: {
     backgroundColor: "#fa91b4",
-    marginTop:"auto",
-    alignSelf:"center",
-    width:350,
-    height:70,
+    marginTop: "auto",
+    alignSelf: "center",
+    width: 350,
+    height: 70,
     borderColor: "#fa91b4",
-    borderRadius:25,
-    marginBottom:25,
-    marginRight:40,
-     
+    borderRadius: 25,
+    marginBottom: 25,
+    marginRight: 40,
+
   }
 });

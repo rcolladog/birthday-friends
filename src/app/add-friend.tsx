@@ -1,18 +1,32 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
-import { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Image, Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { friendService } from '../services/friendService';
 
-export default function AddFriend() {
 
+export default function AddFriend() {
+     const { id } = useLocalSearchParams();
     const [birthday, setBirthday] = useState(new Date());
     const [isEnabled, setIsEnabled] = useState(false);
     const [image, setImage] = useState<string | undefined>(undefined);
-    const { control, handleSubmit, formState: { errors } } = useForm<{ name: string }>();
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm<{ name: string }>();
+
+     useEffect(() => {
+        if (id) {
+            friendService.getById(id as string).then((data) => {
+                if (data) {
+                    setBirthday(new Date(data.birthday));
+                    setImage(data.image);
+                    setIsEnabled(data.reminder || false);
+                    setValue("name", data.name);
+                }
+            });
+        }
+    }, [id, setValue]);
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -27,9 +41,25 @@ export default function AddFriend() {
         }
     };
     const onSubmit = async (data: { name: string }) => {
-        try{ 
-        await friendService.create({ name: data.name, birthday: birthday.toISOString().split("T")[0], image: image, reminder:isEnabled });
-        router.push("/");
+         try {
+            if (id) {
+                // Editar
+                await friendService.update(id as string, {
+                    name: data.name,
+                    birthday: birthday.toISOString().split("T")[0],
+                    image: image,
+                    reminder: isEnabled,
+                });
+            } else {
+                // Crear nuevo
+                await friendService.create({
+                    name: data.name,
+                    birthday: birthday.toISOString().split("T")[0],
+                    image: image,
+                    reminder: isEnabled,
+                });
+            }
+            router.push("/");
         } catch (error) {
         console.error("Error creando amigo:", error);
     }
@@ -92,7 +122,7 @@ export default function AddFriend() {
            
 
             <Pressable style={style.saveButton} onPress={handleSubmit(onSubmit)}>
-                <Text style={style.whiteText}>Guardar</Text>
+                <Text style={style.whiteText}>{id ? "Guardar Cambios" : "Guardar"}</Text>
             </Pressable>
         </View>
 
@@ -149,7 +179,7 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    whiteText: { color: "white", fontSize: 16, fontWeight: "bold" },
+    whiteText: { color: "white", fontSize: 20, fontWeight: "600", },
 
     inputDate: {
          flexDirection: "row",

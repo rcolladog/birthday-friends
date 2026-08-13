@@ -7,12 +7,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-url-polyfill/auto';
 import Footer from "../components/footer";
 import { initSession } from "../services/authService";
+import { notificationService } from '../services/notificationService';
+
 
 export default function RootLayout() {
 
   const [ready, setReady] = useState(false);
   
-  useEffect(() => {initSession().then(() => setReady(true)).catch((err) => console.error("Error: ", err))}, []);
+  useEffect(() => {initSession().then(() => {
+   notificationService.birthdayNotification(); setReady(true);}).catch((err) => console.error("Error: ", err))}, []);
 
 
 if(!ready){
@@ -30,6 +33,7 @@ if(!ready){
       <Stack screenOptions={{ contentStyle: globalStyles.background }}>
         <Stack.Screen name="index" options={{ header: () => <Header></Header> }} />
         <Stack.Screen name="add-friend"  options={{ header: () => <Header /> }} />
+        <Stack.Screen name="calendar"  options={{ header: () => <Header /> }} />
     
       </Stack>
       <Footer></Footer>
