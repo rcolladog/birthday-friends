@@ -101,7 +101,7 @@ export default function AddFriend() {
                 <Text style={style.title}>RECORDATORIO</Text>
 
                 <View style={[style.input, style.inputSwitch]}>
-                    <Text style={style.text}>Avisar el día de antes</Text>
+                    <Text style={style.text}>Activar notificación</Text>
                     <Switch style={style.switch} value={isEnabled} onValueChange={setIsEnabled} trackColor={{ false: "#ccc", true: "#fa91b4" }}></Switch>
                 </View>
 
