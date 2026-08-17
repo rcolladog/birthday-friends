@@ -1,0 +1,45 @@
+name: Build iOS with EAS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Create .env file
+        run: |
+          echo "EXPO_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
+          echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+      
+      - name: Login to Expo
+        run: npx eas-cli@latest login --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      
+      - name: Build iOS
+        run: npx eas-cli@latest build --platform ios --non-interactive
+      
+      - name: Download IPA
+        run: |
+          BUILD_URL=$(npx eas-cli@latest build:list --platform ios --limit 1 --json | jq -r '.builds[0].artifacts.buildUrl')
+          curl -o birthday-friends.ipa "$BUILD_URL"
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: birthday-friends.ipa
+          tag_name: v${{ github.run_number }} # Nombre del release v1, v2, v3
