@@ -21,6 +21,8 @@ jobs:
         run: |
           echo "EXPO_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+      - name: Init EAS project
+        run: npx eas-cli@latest init --id ${{ secrets.EAS_PROJECT_ID }} --non-interactive
       - name: Build iOS
         run: npx eas-cli@latest build --platform ios --non-interactive --wait
       - name: Download IPA
@@ -31,4 +33,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: birthday-friends.ipa
-          tag_name: v${{ github.run_number }}  # Nombre del release v1, v2, v3
+          tag_name: v${{ github.run_number }} # Nombre del release v1, v2, v3
