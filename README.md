@@ -53,7 +53,7 @@ Una app móvil para nunca olvidar los cumpleaños de tus amigos. Construida con 
 
 1. **Clona el repositorio**
 ```bash
-git clone https://github.com/tu-usuario/birthday-friends.git
+git clone https://github.com/rcolladog/birthday-friends.git
 cd birthday-friends
 ```
 
