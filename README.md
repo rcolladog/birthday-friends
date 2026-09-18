@@ -1,4 +1,4 @@
- Birthday Friends
+ # Birthday Friends
 
 Una app móvil para nunca olvidar los cumpleaños de tus amigos. Construida con React Native y Expo.
 
@@ -26,7 +26,7 @@ Una app móvil para nunca olvidar los cumpleaños de tus amigos. Construida con 
 
 ---
 
-## 🛠 Stack Tecnológico
+## Stack Tecnológico
 
 | Tecnología | Uso |
 |---|---|
